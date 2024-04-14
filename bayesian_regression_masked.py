@@ -38,7 +38,7 @@ with pm.Model() as m2d:
     X_data = pm.Data("X", X_aug, mutable=True)
 
     # priors
-    beta = pm.Normal("beta", mu=0, sigma=1000, shape=X_aug.shape[1])
+    beta = pm.Normal("beta", mu=0, sigma=1000, shape=(X_aug.shape[1]))
     tau = pm.Gamma("tau", alpha=0.001, beta=0.001)
     sigma = pm.Deterministic("sigma", 1 / pm.math.sqrt(tau))
     variance = pm.Deterministic("variance", 1 / tau)
@@ -50,7 +50,9 @@ with pm.Model() as m2d:
 
     # Bayesian R2
     sse = (n - p) * variance
-    cy = y - y.mean()
+    cy = y - y_masked.mean()
+    cy = np.nan_to_num(cy)
+
     sst = pm.math.dot(cy, cy)
     br2 = pm.Deterministic("br2", 1 - sse / sst)
     
@@ -58,4 +60,4 @@ with pm.Model() as m2d:
     ppc = pm.sample_posterior_predictive(trace)
 
 
-print(az.summary(trace, hdi_prob=0.95))
+az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('out_masked.csv', index=True)
