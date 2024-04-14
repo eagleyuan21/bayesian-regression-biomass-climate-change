@@ -5,8 +5,9 @@ import arviz as az
 
 data = pd.read_csv("the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
 
+data = data[data['biomass_density_gm2'].notnull()]
+
 y = data["biomass_density_gm2"].to_numpy(copy=True)
-y_masked = np.ma.masked_invalid(y)
 
 
 X_year = data["year"].to_numpy(copy=True)
@@ -47,12 +48,11 @@ with pm.Model() as m2d:
     mu = pm.math.dot(X_data, beta)
 
     # likelihood
-    pm.Normal("likelihood", mu=mu, sigma=sigma, observed=y_masked)
+    pm.Normal("likelihood", mu=mu, sigma=sigma, observed=y)
 
     # Bayesian R2
     sse = (n - p) * variance
-    cy = y - y_masked.mean()
-    cy = np.nan_to_num(cy)
+    cy = y - y.mean()
 
     sst = pm.math.dot(cy, cy)
     br2 = pm.Deterministic("br2", 1 - sse / sst)
@@ -61,6 +61,6 @@ with pm.Model() as m2d:
     ppc = pm.sample_posterior_predictive(trace)
 
 
-az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('out_masked.csv', index=True)
+az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('out.csv', index=True)
 tree = pm.model_to_graphviz(m2d)
-tree.render(filename='model_visual_masking',format='jpg')
+tree.render(filename='model_visual',format='jpg')
