@@ -37,6 +37,13 @@ X_aug = np.concatenate((X_year, X_plant, X_zone, X_temp, X_grow, X_rain), axis=1
 
 model.fit(X_aug, y)
 
-print(model.score(X_aug, y))
-print(model.coef_, model.intercept_)
+vals = [['c0', model.intercept_]]
 
+for i in range(len(model.coef_)):
+    row = ['c'+str(i+1), model.coef_[i]]
+    vals.append(row)
+
+vals.append(['r2', model.score(X_aug, y)])
+
+df = pd.DataFrame(vals, columns=['variables', 'value'])
+df.to_csv('out_frequentist.csv')
