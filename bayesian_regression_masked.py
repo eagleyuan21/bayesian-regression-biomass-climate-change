@@ -2,6 +2,7 @@ import pymc as pm
 import pandas as pd
 import numpy as np
 import arviz as az
+import matplotlib.pyplot as plt
 
 data = pd.read_csv("the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
 
@@ -64,3 +65,17 @@ with pm.Model() as m2d:
 az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('out_masked.csv', index=True)
 tree = pm.model_to_graphviz(m2d)
 tree.render(filename='model_visual_masking',format='jpg')
+
+with m2d:
+    idata = pm.sample(1000, cores = 1)
+
+az.plot_trace(idata)
+fig = plt.gcf()
+fig.savefig("out_mask_plots_vars.jpg")
+
+with m2d:
+    pm.sample_posterior_predictive(idata, extend_inferencedata=True)
+
+az.plot_ppc(idata)
+fig = plt.gcf()
+fig.savefig("out_mask_plots_post.jpg")
