@@ -17,10 +17,10 @@ Deterministic" shape=box]
 	tau [label="tau
 ~
 Gamma" shape=ellipse]
-	variance [label="variance
+	sigma [label="sigma
 ~
 Deterministic" shape=box]
-	sigma [label="sigma
+	variance [label="variance
 ~
 Deterministic" shape=box]
 	subgraph cluster9831 {
@@ -32,7 +32,7 @@ Normal" shape=ellipse style=filled]
 	tau -> sigma
 	tau -> variance
 	beta -> likelihood
-	X -> likelihood
 	sigma -> likelihood
+	X -> likelihood
 	variance -> br2
 }

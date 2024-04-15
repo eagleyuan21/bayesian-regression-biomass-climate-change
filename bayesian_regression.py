@@ -9,7 +9,7 @@ data = pd.read_csv("the_arctic_plant_aboveground_biomass_synthesis_dataset.csv",
 data = data[data['biomass_density_gm2'].notnull()]
 
 y = data["biomass_density_gm2"].to_numpy(copy=True)
-
+y = y + 0.00001
 
 X_year = data["year"].to_numpy(copy=True)
 X_year = X_year - np.min(X_year)
@@ -49,7 +49,7 @@ with pm.Model() as m2d:
     mu = pm.math.dot(X_data, beta)
 
     # likelihood
-    pm.Normal("likelihood", mu=mu, sigma=sigma, observed=y)
+    pm.Normal("likelihood", mu=mu, sigma=sigma, observed=np.log(y))
 
     # Bayesian R2
     sse = (n - p) * variance
@@ -58,7 +58,7 @@ with pm.Model() as m2d:
     sst = pm.math.dot(cy, cy)
     br2 = pm.Deterministic("br2", 1 - sse / sst)
     
-    trace = pm.sample(5000, cores=1)
+    trace = pm.sample(1, cores=1)
     ppc = pm.sample_posterior_predictive(trace)
 
 
