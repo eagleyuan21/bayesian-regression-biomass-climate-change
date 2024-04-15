@@ -50,9 +50,9 @@ with pm.Model() as m2d:
     pm.Normal("likelihood", mu=mu, sigma=sigma, observed=y_masked)
 
     # Bayesian R2
-    sse = (n - p) * variance
     cy = y - y_masked.mean()
-    cy = np.nan_to_num(cy)
+    cy = cy[~np.isnan(cy)]
+    sse = (cy.size - p) * variance
 
     sst = pm.math.dot(cy, cy)
     br2 = pm.Deterministic("br2", 1 - sse / sst)
