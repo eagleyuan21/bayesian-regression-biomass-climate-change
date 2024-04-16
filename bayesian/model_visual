@@ -14,15 +14,15 @@ Normal" shape=ellipse]
 	br2 [label="br2
 ~
 Deterministic" shape=box]
-	tau [label="tau
-~
-Gamma" shape=ellipse]
 	sigma [label="sigma
 ~
 Deterministic" shape=box]
 	variance [label="variance
 ~
 Deterministic" shape=box]
+	tau [label="tau
+~
+Gamma" shape=ellipse]
 	subgraph cluster9831 {
 		likelihood [label="likelihood
 ~

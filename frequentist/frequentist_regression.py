@@ -5,12 +5,13 @@ import numpy as np
 
 model = LinearRegression()
 
-data = pd.read_csv("the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
+data = pd.read_csv("../original_source/the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
 
 data = data[data['biomass_density_gm2'].notnull()]
+data = data[data['biomass_density_gm2'] != 0]
 
 y = data["biomass_density_gm2"].to_numpy(copy=True)
-
+y = np.log(y + 1)
 
 X_year = data["year"].to_numpy(copy=True)
 X_year = X_year - np.min(X_year)
@@ -46,4 +47,4 @@ for i in range(len(model.coef_)):
 vals.append(['r2', model.score(X_aug, y)])
 
 df = pd.DataFrame(vals, columns=['variables', 'value'])
-df.to_csv('out_frequentist.csv')
+df.to_csv('out_frequentist_nozeros.csv')
