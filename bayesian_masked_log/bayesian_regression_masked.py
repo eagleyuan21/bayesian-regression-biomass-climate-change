@@ -5,7 +5,7 @@ import arviz as az
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("../original_source/the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
-#data = data[data['biomass_density_gm2'] != 0]
+data = data[data['biomass_density_gm2'] != 0]
 
 y = data["biomass_density_gm2"].to_numpy(copy=True)
 y = np.log(y + 1)
@@ -61,12 +61,15 @@ with pm.Model() as m2d:
     sst = pm.math.dot(cy, cy)
     br2 = pm.Deterministic("br2", 1 - sse / sst)
     
-    trace = pm.sample(5000, cores=1)
+    trace = pm.sample(1000, cores=1)
     ppc = pm.sample_posterior_predictive(trace)
 
 
-az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('out_masked.csv', index=True)
-'''
+az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('nozeros/out.csv', index=True)
+
+y_pred = ppc.posterior_predictive.stack(sample=("chain", "draw"))["likelihood"].values.T
+az.r2_score(y, y_pred).to_csv('nozeros/r2.csv')
+
 tree = pm.model_to_graphviz(m2d)
 tree.render(filename='model_visual_masking',format='jpg')
-'''
+

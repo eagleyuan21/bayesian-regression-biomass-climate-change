@@ -43,29 +43,17 @@ with pm.Model() as m2d:
 
     # priors
     beta = pm.Normal("beta", mu=0, sigma=1000, shape=(X_aug.shape[1]))
-    tau = pm.Gamma("tau", alpha=0.001, beta=0.001)
-    sigma = pm.Deterministic("sigma", 1 / pm.math.sqrt(tau))
-    variance = pm.Deterministic("variance", 1 / tau)
 
-    mu = pm.math.dot(X_data, beta)
+    mu = -1 * pm.math.dot(X_data, beta)
 
     # likelihood
-    pm.Normal("likelihood", mu=mu, sigma=sigma, observed=y_masked)
-
-    # Bayesian R2
-    cy = y - y_masked.mean()
-    cy = cy[~np.isnan(cy)]
-    sse = (cy.size - p) * variance
-
-    sst = pm.math.dot(cy, cy)
-    br2 = pm.Deterministic("br2", 1 - sse / sst)
+    pm.Exponential("likelihood", lam=mu, observed=y_masked)
     
-    trace = pm.sample(5000, cores=1)
+    trace = pm.sample(1000, cores=1)
     ppc = pm.sample_posterior_predictive(trace)
 
 
-az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('out_masked.csv', index=True)
-'''
+az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('zeros/out.csv', index=True)
+
 tree = pm.model_to_graphviz(m2d)
 tree.render(filename='model_visual_masking',format='jpg')
-'''

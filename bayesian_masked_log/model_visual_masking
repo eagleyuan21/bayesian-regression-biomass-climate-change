@@ -1,0 +1,55 @@
+digraph {
+	subgraph "cluster8124 x 7" {
+		X [label="X
+~
+MutableData" shape=box style="rounded, filled"]
+		label="8124 x 7" labeljust=r labelloc=b style=rounded
+	}
+	subgraph cluster7 {
+		beta [label="beta
+~
+Normal" shape=ellipse]
+		label=7 labeljust=r labelloc=b style=rounded
+	}
+	variance [label="variance
+~
+Deterministic" shape=box]
+	tau [label="tau
+~
+Gamma" shape=ellipse]
+	br2 [label="br2
+~
+Deterministic" shape=box]
+	sigma [label="sigma
+~
+Deterministic" shape=box]
+	subgraph cluster6584 {
+		likelihood_observed [label="likelihood_observed
+~
+Normal" shape=ellipse style=filled]
+		label=6584 labeljust=r labelloc=b style=rounded
+	}
+	subgraph cluster1540 {
+		likelihood_unobserved [label="likelihood_unobserved
+~
+Normal" shape=ellipse]
+		label=1540 labeljust=r labelloc=b style=rounded
+	}
+	subgraph cluster8124 {
+		likelihood [label="likelihood
+~
+Deterministic" shape=box]
+		label=8124 labeljust=r labelloc=b style=rounded
+	}
+	tau -> sigma
+	tau -> variance
+	beta -> likelihood_observed
+	X -> likelihood_observed
+	sigma -> likelihood_observed
+	beta -> likelihood_unobserved
+	X -> likelihood_unobserved
+	sigma -> likelihood_unobserved
+	likelihood_observed -> likelihood
+	likelihood_unobserved -> likelihood
+	variance -> br2
+}
