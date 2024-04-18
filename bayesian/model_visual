@@ -1,9 +1,9 @@
 digraph {
-	subgraph "cluster9831 x 7" {
+	subgraph "cluster6584 x 7" {
 		X [label="X
 ~
 MutableData" shape=box style="rounded, filled"]
-		label="9831 x 7" labeljust=r labelloc=b style=rounded
+		label="6584 x 7" labeljust=r labelloc=b style=rounded
 	}
 	subgraph cluster7 {
 		beta [label="beta
@@ -11,28 +11,12 @@ MutableData" shape=box style="rounded, filled"]
 Normal" shape=ellipse]
 		label=7 labeljust=r labelloc=b style=rounded
 	}
-	br2 [label="br2
-~
-Deterministic" shape=box]
-	sigma [label="sigma
-~
-Deterministic" shape=box]
-	variance [label="variance
-~
-Deterministic" shape=box]
-	tau [label="tau
-~
-Gamma" shape=ellipse]
-	subgraph cluster9831 {
+	subgraph cluster6584 {
 		likelihood [label="likelihood
 ~
-Normal" shape=ellipse style=filled]
-		label=9831 labeljust=r labelloc=b style=rounded
+Exponential" shape=ellipse style=filled]
+		label=6584 labeljust=r labelloc=b style=rounded
 	}
-	tau -> sigma
-	tau -> variance
 	beta -> likelihood
-	sigma -> likelihood
 	X -> likelihood
-	variance -> br2
 }

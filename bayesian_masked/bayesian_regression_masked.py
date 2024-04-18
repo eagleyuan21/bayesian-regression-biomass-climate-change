@@ -8,7 +8,6 @@ data = pd.read_csv("../original_source/the_arctic_plant_aboveground_biomass_synt
 #data = data[data['biomass_density_gm2'] != 0]
 
 y = data["biomass_density_gm2"].to_numpy(copy=True)
-y = np.log(y + 1)
 
 y_masked = np.ma.masked_invalid(y)
 
