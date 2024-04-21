@@ -1,9 +1,9 @@
 digraph {
-	subgraph "cluster6584 x 7" {
+	subgraph "cluster9831 x 7" {
 		X [label="X
 ~
 MutableData" shape=box style="rounded, filled"]
-		label="6584 x 7" labeljust=r labelloc=b style=rounded
+		label="9831 x 7" labeljust=r labelloc=b style=rounded
 	}
 	subgraph cluster7 {
 		beta [label="beta
@@ -11,12 +11,12 @@ MutableData" shape=box style="rounded, filled"]
 Normal" shape=ellipse]
 		label=7 labeljust=r labelloc=b style=rounded
 	}
-	subgraph cluster6584 {
+	subgraph cluster9831 {
 		likelihood [label="likelihood
 ~
 Exponential" shape=ellipse style=filled]
-		label=6584 labeljust=r labelloc=b style=rounded
+		label=9831 labeljust=r labelloc=b style=rounded
 	}
-	beta -> likelihood
 	X -> likelihood
+	beta -> likelihood
 }

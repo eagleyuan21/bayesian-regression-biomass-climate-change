@@ -29,10 +29,10 @@ Exponential" shape=ellipse]
 Deterministic" shape=box]
 		label=8124 labeljust=r labelloc=b style=rounded
 	}
-	X -> likelihood_observed
 	beta -> likelihood_observed
-	X -> likelihood_unobserved
+	X -> likelihood_observed
 	beta -> likelihood_unobserved
-	likelihood_unobserved -> likelihood
+	X -> likelihood_unobserved
 	likelihood_observed -> likelihood
+	likelihood_unobserved -> likelihood
 }

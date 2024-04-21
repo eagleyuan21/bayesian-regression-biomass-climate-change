@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 data = pd.read_csv("../original_source/the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
 
 data = data[data['biomass_density_gm2'].notnull()]
-data = data[data['biomass_density_gm2'] != 0]
+#data = data[data['biomass_density_gm2'] != 0]
 
 y = data["biomass_density_gm2"].to_numpy(copy=True)
 
@@ -43,7 +43,7 @@ with pm.Model() as m2d:
     # priors
     beta = pm.Normal("beta", mu=0, sigma=1000, shape=(X_aug.shape[1]))
 
-    mu = -1 * pm.math.dot(X_data, beta)
+    mu = -1 / pm.math.dot(X_data, beta)
 
     # likelihood
     pm.Exponential("likelihood", lam=mu, observed=y)
@@ -52,9 +52,9 @@ with pm.Model() as m2d:
     ppc = pm.sample_posterior_predictive(trace)
 
 y_pred = ppc.posterior_predictive.stack(sample=("chain", "draw"))["likelihood"].values.T
-az.r2_score(y, y_pred).to_csv('nozeros/r2.csv')
+az.r2_score(y, y_pred).to_csv('zeros/r2.csv')
 
-az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('nozeros/out.csv', index=True)
+az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('zeros/out.csv', index=True)
 
 tree = pm.model_to_graphviz(m2d)
 tree.render(filename='model_visual',format='jpg')
@@ -64,11 +64,11 @@ with m2d:
 
 az.plot_trace(idata)
 fig = plt.gcf()
-fig.savefig("nozeros/out_plots_vars.jpg")
+fig.savefig("zeros/out_plots_vars.jpg")
 
 with m2d:
     pm.sample_posterior_predictive(idata, extend_inferencedata=True)
 
 az.plot_ppc(idata)
 fig = plt.gcf()
-fig.savefig("nozeros/out_plots_post.jpg")
+fig.savefig("zeros/out_plots_post.jpg")

@@ -5,7 +5,7 @@ import arviz as az
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("../original_source/the_arctic_plant_aboveground_biomass_synthesis_dataset.csv", sep=",", encoding="ISO-8859-1")
-#data = data[data['biomass_density_gm2'] != 0]
+data = data[data['biomass_density_gm2'] != 0]
 
 y = data["biomass_density_gm2"].to_numpy(copy=True)
 
@@ -44,7 +44,7 @@ with pm.Model() as m2d:
     # priors
     beta = pm.Normal("beta", mu=0, sigma=1000, shape=(X_aug.shape[1]))
 
-    mu = -1 * pm.math.dot(X_data, beta)
+    mu = -1 / pm.math.dot(X_data, beta)
 
     # likelihood
     pm.Exponential("likelihood", lam=mu, observed=y_masked)
@@ -53,7 +53,7 @@ with pm.Model() as m2d:
     ppc = pm.sample_posterior_predictive(trace)
 
 
-az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('zeros/out.csv', index=True)
+az.summary(trace, hdi_prob=0.95, kind='stats').to_csv('nozeros/out.csv', index=True)
 
 tree = pm.model_to_graphviz(m2d)
 tree.render(filename='model_visual_masking',format='jpg')
